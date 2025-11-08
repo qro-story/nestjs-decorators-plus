@@ -1,0 +1,75 @@
+{
+  "name": "nestjs-decorators-plus",
+  "version": "0.1.0",
+  "description": "NestJS decorators for Swagger, TypeORM, and Route handling with validation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"No tests yet\"",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "nestjs",
+    "decorators",
+    "swagger",
+    "typeorm",
+    "validation",
+    "typescript",
+    "nest",
+    "property-decorator",
+    "route-decorator",
+    "column-decorator",
+    "class-validator",
+    "class-transformer"
+  ],
+  "author": "qro-story",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qro-story/nestjs-decorators-plus.git"
+  },
+  "bugs": {
+    "url": "https://github.com/qro-story/nestjs-decorators-plus/issues"
+  },
+  "homepage": "https://github.com/qro-story/nestjs-decorators-plus#readme",
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/passport": "^10.0.0",
+    "@nestjs/swagger": "^7.0.0",
+    "class-transformer": "^0.5.0",
+    "class-validator": "^0.14.0",
+    "joi": "^17.0.0",
+    "joi-class-decorators": "^1.0.0",
+    "nestjs-form-data": "^1.9.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.0.0",
+    "typeorm": "^0.3.0"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^10.4.1",
+    "@nestjs/core": "^10.4.1",
+    "@nestjs/passport": "^10.0.3",
+    "@nestjs/swagger": "^7.1.17",
+    "@nestjs/typeorm": "^10.0.2",
+    "@types/express": "^5.0.5",
+    "@types/lodash": "^4.17.0",
+    "@types/node": "^20.3.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "joi": "^17.12.3",
+    "joi-class-decorators": "^1.1.1",
+    "lodash": "^4.17.21",
+    "nestjs-form-data": "^1.9.91",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.20",
+    "typescript": "^5.1.3"
+  }
+}
