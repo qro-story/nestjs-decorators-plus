@@ -4,18 +4,18 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.1-blue.svg)](https://www.typescriptlang.org/)
 
-> **⚠️ Early Release (v0.1.0)** - 이 라이브러리는 초기 개발 단계입니다. API가 변경될 수 있습니다.
+> **⚠️ Early Release (v0.1.0)** - This library is in early development. API may change.
 
-NestJS용 강력하고 사용하기 쉬운 데코레이터 라이브러리입니다. Swagger 문서화, TypeORM 컬럼 정의, 라우트 설정을 단일 데코레이터로 간편하게 처리할 수 있습니다.
+A powerful and easy-to-use decorator library for NestJS. Handle Swagger documentation, TypeORM column definitions, and route configurations with a single decorator.
 
 ## 🚀 Features
 
-- ✅ **@Property**: Swagger + Validation + Transformation 통합 데코레이터
-- ✅ **@Route**: NestJS 라우터 + Guards + Interceptors 통합 데코레이터
-- ✅ **@Column**: TypeORM 컬럼 + Validation 통합 데코레이터
-- ✅ TypeScript 완벽 지원
-- ✅ 보일러플레이트 코드 최소화
-- ✅ Interceptors, Guards, Pipes, Filters 포함
+- ✅ **@Property**: Unified decorator for Swagger + Validation + Transformation
+- ✅ **@Route**: Unified decorator for NestJS Router + Guards + Interceptors
+- ✅ **@Column**: Unified decorator for TypeORM Column + Validation
+- ✅ Full TypeScript support
+- ✅ Minimize boilerplate code
+- ✅ Built-in Interceptors, Guards, Pipes, and Filters
 
 ## 📦 Installation
 
@@ -29,7 +29,7 @@ pnpm add nestjs-decorators-plus
 
 ## 📋 Peer Dependencies
 
-이 패키지를 사용하기 위해서는 다음 의존성들이 필요합니다:
+This package requires the following dependencies:
 
 ```bash
 npm install @nestjs/common @nestjs/swagger @nestjs/passport class-validator class-transformer typeorm joi joi-class-decorators nestjs-form-data reflect-metadata rxjs
@@ -39,7 +39,7 @@ npm install @nestjs/common @nestjs/swagger @nestjs/passport class-validator clas
 
 ### @Property Decorator
 
-DTO 클래스에서 Swagger 문서화와 validation을 한 번에 처리합니다.
+Handle Swagger documentation and validation in DTO classes at once.
 
 ```typescript
 import { Property } from 'nestjs-decorators-plus';
@@ -48,8 +48,8 @@ class CreateUserDto {
   @Property({
     type: 'string',
     required: true,
-    description: '사용자 이름',
-    example: '홍길동'
+    description: 'User name',
+    example: 'John Doe'
   })
   name: string;
 
@@ -58,7 +58,7 @@ class CreateUserDto {
     min: 0,
     max: 150,
     positive: true,
-    description: '나이'
+    description: 'User age'
   })
   age: number;
 
@@ -66,14 +66,14 @@ class CreateUserDto {
     type: 'string',
     enum: ['ADMIN', 'USER'],
     required: true,
-    description: '사용자 역할'
+    description: 'User role'
   })
   role: string;
 
   @Property({
     type: 'array',
     schema: String,
-    description: '취미 목록'
+    description: 'User hobbies'
   })
   hobbies: string[];
 }
@@ -81,20 +81,20 @@ class CreateUserDto {
 
 #### Supported Types
 
-- `'string'` - 문자열
-- `'number'` - 숫자
-- `'boolean'` - 불린
-- `'date'` - 날짜
-- `'file'` - 파일 업로드 (단일)
-- `'files'` - 파일 업로드 (다중)
-- `'array'` - 배열
-- `'object'` - 객체
+- `'string'` - String
+- `'number'` - Number
+- `'boolean'` - Boolean
+- `'date'` - Date
+- `'file'` - File upload (single)
+- `'files'` - File upload (multiple)
+- `'array'` - Array
+- `'object'` - Object
 - `'json'` - JSON
-- `'any'` - 모든 타입
+- `'any'` - Any type
 
 ### @Route Decorator
 
-컨트롤러 메서드에서 라우트, 인증, 인터셉터를 한 번에 설정합니다.
+Configure routes, authentication, and interceptors in controller methods at once.
 
 ```typescript
 import { Route, HttpMethodEnum } from 'nestjs-decorators-plus';
@@ -105,12 +105,12 @@ class UserController {
   @Route({
     path: '/',
     method: HttpMethodEnum.POST,
-    summary: '사용자 생성',
-    description: '새로운 사용자를 생성합니다',
-    auth: true,  // Bearer Auth 적용
-    guards: [JwtAuthGuard],  // 인증 가드 적용
-    timeout: 5000,  // 5초 타임아웃
-    transform: UserResponseDto,  // 응답 변환
+    summary: 'Create user',
+    description: 'Create a new user',
+    auth: true,  // Apply Bearer Auth
+    guards: [JwtAuthGuard],  // Apply authentication guard
+    timeout: 5000,  // 5 second timeout
+    transform: UserResponseDto,  // Transform response
     tags: ['Users']
   })
   async createUser(@Body() dto: CreateUserDto) {
@@ -120,7 +120,7 @@ class UserController {
   @Route({
     path: '/:id',
     method: HttpMethodEnum.GET,
-    summary: '사용자 조회',
+    summary: 'Get user',
     transform: UserResponseDto
   })
   async getUser(@Param('id') id: string) {
@@ -130,10 +130,10 @@ class UserController {
   @Route({
     path: '/:id',
     method: HttpMethodEnum.PUT,
-    summary: '사용자 업데이트',
+    summary: 'Update user',
     auth: true,
     guards: [JwtAuthGuard],
-    transactional: true,  // DB 트랜잭션 자동 처리
+    transactional: true,  // Automatic DB transaction handling
     transform: UserResponseDto
   })
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
@@ -159,7 +159,7 @@ enum HttpMethodEnum {
 
 ### @Column Decorator
 
-TypeORM 엔티티에서 컬럼 정의와 validation을 통합합니다.
+Integrate column definitions and validation in TypeORM entities.
 
 ```typescript
 import { Column } from 'nestjs-decorators-plus';
@@ -175,23 +175,23 @@ class User {
     length: 100,
     unique: true,
     index: true,
-    description: '사용자 이메일',
+    description: 'User email',
     nullable: false
   })
   email: string;
 
   @Column({
-    type: 'password',  // varchar로 자동 변환
+    type: 'password',  // Automatically converted to varchar
     length: 255,
-    description: '비밀번호 해시'
+    description: 'Password hash'
   })
   password: string;
 
   @Column({
     type: 'text',
-    json: true,  // JSON 타입으로 처리
+    json: true,  // Treated as JSON type
     nullable: true,
-    description: '사용자 설정'
+    description: 'User settings'
   })
   settings: any;
 
@@ -199,7 +199,7 @@ class User {
     type: 'int',
     unsigned: true,
     default: 0,
-    description: '로그인 횟수'
+    description: 'Login count'
   })
   loginCount: number;
 
@@ -207,7 +207,7 @@ class User {
     type: 'datetime',
     nullable: true,
     onUpdate: 'CURRENT_TIMESTAMP',
-    description: '마지막 업데이트 시간'
+    description: 'Last update time'
   })
   updatedAt: Date;
 }
@@ -215,7 +215,7 @@ class User {
 
 ### Interceptors
 
-패키지에 포함된 유용한 인터셉터들:
+Useful interceptors included in the package:
 
 ```typescript
 import {
@@ -225,17 +225,17 @@ import {
   ResponseInterceptor
 } from 'nestjs-decorators-plus';
 
-// 응답 변환
+// Response transformation
 @UseInterceptors(new DeserializeInterceptor(UserDto))
 @Get()
 getUsers() { ... }
 
-// 타임아웃 설정
+// Timeout configuration
 @UseInterceptors(new TimeoutInterceptor(3000))
 @Get()
 getUsers() { ... }
 
-// 트랜잭션 처리
+// Transaction handling
 @UseInterceptors(TransactionInterceptor)
 @Post()
 createUser() { ... }
@@ -246,10 +246,10 @@ createUser() { ... }
 ```typescript
 import { CustomValidationPipe, ParamValidationPipe } from 'nestjs-decorators-plus';
 
-// 전역 적용
+// Global application
 app.useGlobalPipes(new CustomValidationPipe());
 
-// 개별 파라미터에 적용
+// Individual parameter application
 @Get(':id')
 getUser(@Param('id', ParamValidationPipe) id: string) { ... }
 ```
@@ -266,7 +266,7 @@ logger.error('Error creating user');
 logger.warn('Warning: User already exists');
 logger.debug('Debug info');
 
-// 로거 비활성화
+// Disable logger
 logger.setEnabled(false);
 ```
 
@@ -276,64 +276,64 @@ logger.setEnabled(false);
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `type` | `PropertyType \| ClassConstructor` | 속성 타입 (필수) |
-| `required` | `boolean` | 필수 여부 (기본값: false) |
-| `description` | `string` | 설명 |
-| `example` | `any` | 예시값 |
-| `enum` | `any[]` | 열거형 값 |
-| `min` | `number` | 최소값 (숫자 타입) |
-| `max` | `number` | 최대값 (숫자 타입) |
-| `positive` | `boolean` | 양수 여부 (숫자 타입) |
-| `pattern` | `string` | 정규식 패턴 |
-| `items` | `any` | 배열 아이템 타입 |
-| `schema` | `ClassConstructor` | 중첩 객체 스키마 |
-| `default` | `any` | 기본값 |
-| `exclude` | `boolean` | 응답에서 제외 |
-| `json` | `boolean` | JSON 타입 여부 |
-| `dynamic` | `boolean` | 동적 타입 여부 |
+| `type` | `PropertyType \| ClassConstructor` | Property type (required) |
+| `required` | `boolean` | Required flag (default: false) |
+| `description` | `string` | Description |
+| `example` | `any` | Example value |
+| `enum` | `any[]` | Enum values |
+| `min` | `number` | Minimum value (number type) |
+| `max` | `number` | Maximum value (number type) |
+| `positive` | `boolean` | Positive flag (number type) |
+| `pattern` | `string` | Regex pattern |
+| `items` | `any` | Array item type |
+| `schema` | `ClassConstructor` | Nested object schema |
+| `default` | `any` | Default value |
+| `exclude` | `boolean` | Exclude from response |
+| `json` | `boolean` | JSON type flag |
+| `dynamic` | `boolean` | Dynamic type flag |
 
 ### Route Options
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `path` | `string` | 라우트 경로 (필수) |
-| `method` | `HttpMethodEnum` | HTTP 메서드 (필수) |
-| `summary` | `string` | API 요약 |
-| `description` | `string` | API 상세 설명 |
-| `tags` | `string[]` | Swagger 태그 |
-| `auth` | `boolean` | 인증 필요 여부 |
-| `guards` | `Type<CanActivate>[]` | 가드 배열 |
-| `timeout` | `number` | 타임아웃 (ms) |
-| `transform` | `ClassConstructor` | 응답 변환 클래스 |
-| `transactional` | `boolean` | 트랜잭션 처리 여부 |
-| `redirect` | `boolean` | 리다이렉트 여부 |
-| `exclude` | `boolean` | Swagger 문서에서 제외 |
+| `path` | `string` | Route path (required) |
+| `method` | `HttpMethodEnum` | HTTP method (required) |
+| `summary` | `string` | API summary |
+| `description` | `string` | API detailed description |
+| `tags` | `string[]` | Swagger tags |
+| `auth` | `boolean` | Authentication required |
+| `guards` | `Type<CanActivate>[]` | Guard array |
+| `timeout` | `number` | Timeout (ms) |
+| `transform` | `ClassConstructor` | Response transformation class |
+| `transactional` | `boolean` | Transaction handling flag |
+| `redirect` | `boolean` | Redirect flag |
+| `exclude` | `boolean` | Exclude from Swagger documentation |
 
 ### Column Options
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `type` | `ColumnType` | 컬럼 타입 (필수) |
-| `length` | `number` | 길이 (varchar, char) |
-| `nullable` | `boolean` | NULL 허용 여부 |
-| `unique` | `boolean` | 유니크 제약 |
-| `index` | `boolean` | 인덱스 생성 |
-| `default` | `any` | 기본값 |
-| `name` | `string` | 컬럼 이름 |
-| `description` | `string` | 컬럼 설명 |
-| `enum` | `any[]` | 열거형 값 |
-| `json` | `boolean` | JSON 타입 여부 |
-| `precision` | `number` | 정밀도 (decimal) |
-| `scale` | `number` | 스케일 (decimal) |
-| `unsigned` | `boolean` | 부호 없는 정수 |
-| `onUpdate` | `string` | 업데이트 시 실행할 SQL |
-| `regex` | `string` | 정규식 검증 패턴 |
+| `type` | `ColumnType` | Column type (required) |
+| `length` | `number` | Length (varchar, char) |
+| `nullable` | `boolean` | NULL allowed |
+| `unique` | `boolean` | Unique constraint |
+| `index` | `boolean` | Create index |
+| `default` | `any` | Default value |
+| `name` | `string` | Column name |
+| `description` | `string` | Column description |
+| `enum` | `any[]` | Enum values |
+| `json` | `boolean` | JSON type flag |
+| `precision` | `number` | Precision (decimal) |
+| `scale` | `number` | Scale (decimal) |
+| `unsigned` | `boolean` | Unsigned integer |
+| `onUpdate` | `string` | SQL to execute on update |
+| `regex` | `string` | Regex validation pattern |
 
 ## 🔧 Advanced Usage
 
 ### Schema Decorator
 
-여러 Property를 사용하는 DTO 클래스에 스키마 옵션을 설정합니다:
+Set schema options for DTO classes using multiple Properties:
 
 ```typescript
 import { Schema, Property } from 'nestjs-decorators-plus';
@@ -350,7 +350,7 @@ class CreateUserDto {
 
 ### Nested Objects
 
-중첩된 객체를 사용할 수 있습니다:
+You can use nested objects:
 
 ```typescript
 class AddressDto {
@@ -400,4 +400,4 @@ SOFTWARE.
 
 ## 🐛 Issues
 
-버그를 발견하셨나요? [GitHub Issues](https://github.com/qro-story/nestjs-decorators-plus/issues)에 리포트해주세요.
+Found a bug? Please report it at [GitHub Issues](https://github.com/qro-story/nestjs-decorators-plus/issues).
