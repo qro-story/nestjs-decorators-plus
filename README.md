@@ -32,8 +32,40 @@ pnpm add nestjs-decorators-plus
 This package requires the following dependencies:
 
 ```bash
-npm install @nestjs/common @nestjs/swagger @nestjs/passport class-validator class-transformer typeorm joi joi-class-decorators nestjs-form-data reflect-metadata rxjs
+npm install @nestjs/common @nestjs/swagger class-validator class-transformer typeorm reflect-metadata rxjs
 ```
+
+### Optional Dependencies
+
+If you want to use Joi validation features (for `ParamValidationPipe` or `Schema` decorator), install:
+
+```bash
+npm install joi joi-class-decorators
+```
+
+If you want to use file upload features, install:
+
+```bash
+npm install nestjs-form-data
+```
+
+If you want to use authentication guards, install:
+
+```bash
+npm install @nestjs/passport
+```
+
+> **Note**: If you're using `reflect-metadata@0.2.x` and encounter dependency conflicts, you can use npm's `--legacy-peer-deps` flag or add overrides in your `package.json`:
+>
+> ```json
+> {
+>   "overrides": {
+>     "joi-class-decorators": {
+>       "reflect-metadata": "^0.1.13 || ^0.2.0"
+>     }
+>   }
+> }
+> ```
 
 ## 🎯 Usage
 
@@ -42,38 +74,38 @@ npm install @nestjs/common @nestjs/swagger @nestjs/passport class-validator clas
 Handle Swagger documentation and validation in DTO classes at once.
 
 ```typescript
-import { Property } from 'nestjs-decorators-plus';
+import { Property } from "nestjs-decorators-plus";
 
 class CreateUserDto {
   @Property({
-    type: 'string',
+    type: "string",
     required: true,
-    description: 'User name',
-    example: 'John Doe'
+    description: "User name",
+    example: "John Doe",
   })
   name: string;
 
   @Property({
-    type: 'number',
+    type: "number",
     min: 0,
     max: 150,
     positive: true,
-    description: 'User age'
+    description: "User age",
   })
   age: number;
 
   @Property({
-    type: 'string',
-    enum: ['ADMIN', 'USER'],
+    type: "string",
+    enum: ["ADMIN", "USER"],
     required: true,
-    description: 'User role'
+    description: "User role",
   })
   role: string;
 
   @Property({
-    type: 'array',
+    type: "array",
     schema: String,
-    description: 'User hobbies'
+    description: "User hobbies",
   })
   hobbies: string[];
 }
@@ -97,46 +129,46 @@ class CreateUserDto {
 Configure routes, authentication, and interceptors in controller methods at once.
 
 ```typescript
-import { Route, HttpMethodEnum } from 'nestjs-decorators-plus';
-import { Controller, Body } from '@nestjs/common';
+import { Route, HttpMethodEnum } from "nestjs-decorators-plus";
+import { Controller, Body } from "@nestjs/common";
 
-@Controller('users')
+@Controller("users")
 class UserController {
   @Route({
-    path: '/',
+    path: "/",
     method: HttpMethodEnum.POST,
-    summary: 'Create user',
-    description: 'Create a new user',
-    auth: true,  // Apply Bearer Auth
-    guards: [JwtAuthGuard],  // Apply authentication guard
-    timeout: 5000,  // 5 second timeout
-    transform: UserResponseDto,  // Transform response
-    tags: ['Users']
+    summary: "Create user",
+    description: "Create a new user",
+    auth: true, // Apply Bearer Auth
+    guards: [JwtAuthGuard], // Apply authentication guard
+    timeout: 5000, // 5 second timeout
+    transform: UserResponseDto, // Transform response
+    tags: ["Users"],
   })
   async createUser(@Body() dto: CreateUserDto) {
     return this.userService.create(dto);
   }
 
   @Route({
-    path: '/:id',
+    path: "/:id",
     method: HttpMethodEnum.GET,
-    summary: 'Get user',
-    transform: UserResponseDto
+    summary: "Get user",
+    transform: UserResponseDto,
   })
-  async getUser(@Param('id') id: string) {
+  async getUser(@Param("id") id: string) {
     return this.userService.findOne(id);
   }
 
   @Route({
-    path: '/:id',
+    path: "/:id",
     method: HttpMethodEnum.PUT,
-    summary: 'Update user',
+    summary: "Update user",
     auth: true,
     guards: [JwtAuthGuard],
-    transactional: true,  // Automatic DB transaction handling
-    transform: UserResponseDto
+    transactional: true, // Automatic DB transaction handling
+    transform: UserResponseDto,
   })
-  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+  async updateUser(@Param("id") id: string, @Body() dto: UpdateUserDto) {
     return this.userService.update(id, dto);
   }
 }
@@ -146,14 +178,14 @@ class UserController {
 
 ```typescript
 enum HttpMethodEnum {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-  PATCH = 'PATCH',
-  ALL = 'ALL',
-  OPTIONS = 'OPTIONS',
-  HEAD = 'HEAD',
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+  PATCH = "PATCH",
+  ALL = "ALL",
+  OPTIONS = "OPTIONS",
+  HEAD = "HEAD",
 }
 ```
 
@@ -162,8 +194,8 @@ enum HttpMethodEnum {
 Integrate column definitions and validation in TypeORM entities.
 
 ```typescript
-import { Column } from 'nestjs-decorators-plus';
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column } from "nestjs-decorators-plus";
+import { Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 class User {
@@ -171,43 +203,43 @@ class User {
   id: number;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 100,
     unique: true,
     index: true,
-    description: 'User email',
-    nullable: false
+    description: "User email",
+    nullable: false,
   })
   email: string;
 
   @Column({
-    type: 'password',  // Automatically converted to varchar
+    type: "password", // Automatically converted to varchar
     length: 255,
-    description: 'Password hash'
+    description: "Password hash",
   })
   password: string;
 
   @Column({
-    type: 'text',
-    json: true,  // Treated as JSON type
+    type: "text",
+    json: true, // Treated as JSON type
     nullable: true,
-    description: 'User settings'
+    description: "User settings",
   })
   settings: any;
 
   @Column({
-    type: 'int',
+    type: "int",
     unsigned: true,
     default: 0,
-    description: 'Login count'
+    description: "Login count",
   })
   loginCount: number;
 
   @Column({
-    type: 'datetime',
+    type: "datetime",
     nullable: true,
-    onUpdate: 'CURRENT_TIMESTAMP',
-    description: 'Last update time'
+    onUpdate: "CURRENT_TIMESTAMP",
+    description: "Last update time",
   })
   updatedAt: Date;
 }
@@ -257,14 +289,14 @@ getUser(@Param('id', ParamValidationPipe) id: string) { ... }
 ### Logger Helper
 
 ```typescript
-import { MyLogger } from 'nestjs-decorators-plus';
+import { MyLogger } from "nestjs-decorators-plus";
 
-const logger = new MyLogger('UserService', true);
+const logger = new MyLogger("UserService", true);
 
-logger.log('User created');
-logger.error('Error creating user');
-logger.warn('Warning: User already exists');
-logger.debug('Debug info');
+logger.log("User created");
+logger.error("Error creating user");
+logger.warn("Warning: User already exists");
+logger.debug("Debug info");
 
 // Disable logger
 logger.setEnabled(false);
@@ -274,60 +306,60 @@ logger.setEnabled(false);
 
 ### Property Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `type` | `PropertyType \| ClassConstructor` | Property type (required) |
-| `required` | `boolean` | Required flag (default: false) |
-| `description` | `string` | Description |
-| `example` | `any` | Example value |
-| `enum` | `any[]` | Enum values |
-| `min` | `number` | Minimum value (number type) |
-| `max` | `number` | Maximum value (number type) |
-| `positive` | `boolean` | Positive flag (number type) |
-| `pattern` | `string` | Regex pattern |
-| `items` | `any` | Array item type |
-| `schema` | `ClassConstructor` | Nested object schema |
-| `default` | `any` | Default value |
-| `exclude` | `boolean` | Exclude from response |
-| `json` | `boolean` | JSON type flag |
-| `dynamic` | `boolean` | Dynamic type flag |
+| Option        | Type                               | Description                    |
+| ------------- | ---------------------------------- | ------------------------------ |
+| `type`        | `PropertyType \| ClassConstructor` | Property type (required)       |
+| `required`    | `boolean`                          | Required flag (default: false) |
+| `description` | `string`                           | Description                    |
+| `example`     | `any`                              | Example value                  |
+| `enum`        | `any[]`                            | Enum values                    |
+| `min`         | `number`                           | Minimum value (number type)    |
+| `max`         | `number`                           | Maximum value (number type)    |
+| `positive`    | `boolean`                          | Positive flag (number type)    |
+| `pattern`     | `string`                           | Regex pattern                  |
+| `items`       | `any`                              | Array item type                |
+| `schema`      | `ClassConstructor`                 | Nested object schema           |
+| `default`     | `any`                              | Default value                  |
+| `exclude`     | `boolean`                          | Exclude from response          |
+| `json`        | `boolean`                          | JSON type flag                 |
+| `dynamic`     | `boolean`                          | Dynamic type flag              |
 
 ### Route Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `path` | `string` | Route path (required) |
-| `method` | `HttpMethodEnum` | HTTP method (required) |
-| `summary` | `string` | API summary |
-| `description` | `string` | API detailed description |
-| `tags` | `string[]` | Swagger tags |
-| `auth` | `boolean` | Authentication required |
-| `guards` | `Type<CanActivate>[]` | Guard array |
-| `timeout` | `number` | Timeout (ms) |
-| `transform` | `ClassConstructor` | Response transformation class |
-| `transactional` | `boolean` | Transaction handling flag |
-| `redirect` | `boolean` | Redirect flag |
-| `exclude` | `boolean` | Exclude from Swagger documentation |
+| Option          | Type                  | Description                        |
+| --------------- | --------------------- | ---------------------------------- |
+| `path`          | `string`              | Route path (required)              |
+| `method`        | `HttpMethodEnum`      | HTTP method (required)             |
+| `summary`       | `string`              | API summary                        |
+| `description`   | `string`              | API detailed description           |
+| `tags`          | `string[]`            | Swagger tags                       |
+| `auth`          | `boolean`             | Authentication required            |
+| `guards`        | `Type<CanActivate>[]` | Guard array                        |
+| `timeout`       | `number`              | Timeout (ms)                       |
+| `transform`     | `ClassConstructor`    | Response transformation class      |
+| `transactional` | `boolean`             | Transaction handling flag          |
+| `redirect`      | `boolean`             | Redirect flag                      |
+| `exclude`       | `boolean`             | Exclude from Swagger documentation |
 
 ### Column Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `type` | `ColumnType` | Column type (required) |
-| `length` | `number` | Length (varchar, char) |
-| `nullable` | `boolean` | NULL allowed |
-| `unique` | `boolean` | Unique constraint |
-| `index` | `boolean` | Create index |
-| `default` | `any` | Default value |
-| `name` | `string` | Column name |
-| `description` | `string` | Column description |
-| `enum` | `any[]` | Enum values |
-| `json` | `boolean` | JSON type flag |
-| `precision` | `number` | Precision (decimal) |
-| `scale` | `number` | Scale (decimal) |
-| `unsigned` | `boolean` | Unsigned integer |
-| `onUpdate` | `string` | SQL to execute on update |
-| `regex` | `string` | Regex validation pattern |
+| Option        | Type         | Description              |
+| ------------- | ------------ | ------------------------ |
+| `type`        | `ColumnType` | Column type (required)   |
+| `length`      | `number`     | Length (varchar, char)   |
+| `nullable`    | `boolean`    | NULL allowed             |
+| `unique`      | `boolean`    | Unique constraint        |
+| `index`       | `boolean`    | Create index             |
+| `default`     | `any`        | Default value            |
+| `name`        | `string`     | Column name              |
+| `description` | `string`     | Column description       |
+| `enum`        | `any[]`      | Enum values              |
+| `json`        | `boolean`    | JSON type flag           |
+| `precision`   | `number`     | Precision (decimal)      |
+| `scale`       | `number`     | Scale (decimal)          |
+| `unsigned`    | `boolean`    | Unsigned integer         |
+| `onUpdate`    | `string`     | SQL to execute on update |
+| `regex`       | `string`     | Regex validation pattern |
 
 ## 🔧 Advanced Usage
 
@@ -336,14 +368,14 @@ logger.setEnabled(false);
 Set schema options for DTO classes using multiple Properties:
 
 ```typescript
-import { Schema, Property } from 'nestjs-decorators-plus';
+import { Schema, Property } from "nestjs-decorators-plus";
 
 @Schema({ allowUnknown: false })
 class CreateUserDto {
-  @Property({ type: 'string', required: true })
+  @Property({ type: "string", required: true })
   name: string;
 
-  @Property({ type: 'string', required: true })
+  @Property({ type: "string", required: true })
   email: string;
 }
 ```
@@ -354,15 +386,15 @@ You can use nested objects:
 
 ```typescript
 class AddressDto {
-  @Property({ type: 'string', required: true })
+  @Property({ type: "string", required: true })
   street: string;
 
-  @Property({ type: 'string', required: true })
+  @Property({ type: "string", required: true })
   city: string;
 }
 
 class UserDto {
-  @Property({ type: 'string', required: true })
+  @Property({ type: "string", required: true })
   name: string;
 
   @Property({ type: AddressDto, required: true })

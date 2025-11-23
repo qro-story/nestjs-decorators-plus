@@ -3,13 +3,13 @@ import {
   ExecutionContext,
   Injectable,
   NestInterceptor,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { MyLogger } from '../helpers/logger.helper';
-import { customResponseForSuccess } from '../types';
+} from "@nestjs/common";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { MyLogger } from "../helpers/logger.helper";
+import { customResponseForSuccess } from "../types";
 
-const logger = new MyLogger('app:core:interceptor:global');
+const logger = new MyLogger("app:core:interceptor:global");
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
@@ -27,7 +27,7 @@ export class ResponseInterceptor implements NestInterceptor {
         }
 
         return customResponseForSuccess(data);
-      }),
+      })
     );
   }
 }
