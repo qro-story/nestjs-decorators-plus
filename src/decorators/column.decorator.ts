@@ -1,25 +1,25 @@
 // import createLogger from 'debug';
-import { applyDecorators } from '@nestjs/common';
-import { Type } from 'class-transformer';
+import { applyDecorators } from "@nestjs/common";
+import { Type } from "class-transformer";
 import {
   IsBoolean,
   IsEnum,
   IsNumber,
   IsString,
   Matches,
-} from 'class-validator';
+} from "class-validator";
 import {
   ColumnType as OriginalColumnType,
   Index,
   Column as OriginalColumn,
-} from 'typeorm';
-import { CommonError, ERROR } from '../types';
+} from "typeorm";
+import { CommonError, ERROR } from "../types";
 
-type ColumnType = OriginalColumnType | 'password' | 'any';
+type ColumnType = OriginalColumnType | "password" | "any";
 
 export enum Timezone {
-  ASIA_SEOUL = 'Asia/Seoul',
-  UTC = 'UTC',
+  ASIA_SEOUL = "Asia/Seoul",
+  UTC = "UTC",
 }
 export interface ColumnOptions {
   type: ColumnType; // 컬럼 타입
@@ -56,7 +56,7 @@ export function Column(options: ColumnOptions) {
     column.comment = options.description;
   }
 
-  if (options.default) {
+  if (options.default !== undefined) {
     column.default = options.default;
   }
 
@@ -73,12 +73,12 @@ export function Column(options: ColumnOptions) {
   }
 
   switch (options.type) {
-    case 'char':
-    case 'varchar':
+    case "char":
+    case "varchar":
       if (!options.length) {
         throw new CommonError({
           error: ERROR.INSUFFICIENT_PARAMS,
-          message: 'varchar타입은 반드시 length가 주어져야 합니다. ',
+          message: "varchar타입은 반드시 length가 주어져야 합니다. ",
         });
       }
       column.length = options.length;
@@ -87,8 +87,8 @@ export function Column(options: ColumnOptions) {
       decorators.push(Type(() => String));
       break;
 
-    case 'text':
-    case 'longtext':
+    case "text":
+    case "longtext":
       column.json = options.json;
       decorators.push(OriginalColumn(column));
       decorators.push(IsString);
@@ -100,15 +100,15 @@ export function Column(options: ColumnOptions) {
       }
       break;
 
-    case 'datetime':
+    case "datetime":
       column.onUpdate = options.onUpdate;
       decorators.push(OriginalColumn(column));
       decorators.push(IsString);
       decorators.push(Type(() => Date));
       break;
 
-    case 'password':
-      column.type = 'varchar';
+    case "password":
+      column.type = "varchar";
       column.length = options.length;
       decorators.push(OriginalColumn(column));
       decorators.push(IsString);
@@ -125,9 +125,9 @@ export function Column(options: ColumnOptions) {
     //   decorators.push(Type(() => String));
     //   break;
 
-    case 'float':
-    case 'double':
-    case 'decimal':
+    case "float":
+    case "double":
+    case "decimal":
       column.precision = options.precision;
       column.scale = options.scale;
       column.unsigned = options.unsigned;
@@ -136,8 +136,8 @@ export function Column(options: ColumnOptions) {
       decorators.push(Type(() => Number));
       break;
 
-    case 'int':
-    case 'bigint':
+    case "int":
+    case "bigint":
       column.width = options.length;
       column.unsigned = options.unsigned;
       decorators.push(OriginalColumn(column));
@@ -145,7 +145,7 @@ export function Column(options: ColumnOptions) {
       decorators.push(Type(() => Number));
       break;
 
-    case 'boolean':
+    case "boolean":
       decorators.push(OriginalColumn(column));
       decorators.push(IsBoolean);
       decorators.push(Type(() => Boolean));
@@ -153,22 +153,22 @@ export function Column(options: ColumnOptions) {
 
     // for DTO
     default:
-    case 'string':
+    case "string":
       decorators.push(IsString);
       decorators.push(Type(() => String));
       decorators.push(OriginalColumn(column));
       break;
 
-    case 'number':
+    case "number":
       decorators.push(IsNumber);
       decorators.push(Type(() => Number));
       break;
 
-    case 'array':
+    case "array":
       decorators.push(Type(() => Array));
       break;
 
-    case 'any':
+    case "any":
       decorators.push(Type(() => Object));
       break;
   }
